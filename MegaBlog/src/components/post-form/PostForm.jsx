@@ -52,7 +52,7 @@ function PostForm({ post }) {
                 ...data,
                 featuredImage: fileId,
                 userId: userData.$id,
-                userName: userData.name
+                username: userData.name
             });
 
             if (dbPost) {

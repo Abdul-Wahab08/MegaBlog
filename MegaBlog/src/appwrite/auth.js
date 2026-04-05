@@ -62,7 +62,7 @@ export class AuthService {
     }
 }
 
-async resetPassword(userId, secret, newPassword, confirmPassword) {
+async resetPassword({userId, secret, newPassword, confirmPassword}) {
     try {
         return await this.account.updateRecovery(
             userId,

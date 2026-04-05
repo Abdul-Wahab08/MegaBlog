@@ -5,6 +5,8 @@ const config = {
     appWriteCollectionId: String(import.meta.env.VITE_APPWRITE_COLLECTION_ID),
     appWriteLikesId: String(import.meta.env.VITE_APPWRITE_LIKES_ID),
     appWriteBucketId: String(import.meta.env.VITE_APPWRITE_BUCKET_ID),
+    supabaseUrl: String(import.meta.env.VITE_SUPABASE_URL),
+    supabaseKey: String(import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY)
 }
 
 export default config
