@@ -74,7 +74,7 @@ export class Service {
         try {
             return await this.buckets.createFile(conf.appWriteBucketId, ID.unique(), file)
         } catch (error) {
-            throw error;
+            throw error; 
             return false;
         }
     }

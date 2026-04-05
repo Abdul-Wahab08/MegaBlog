@@ -23,44 +23,50 @@ function PostForm({ post }) {
 
     const submit = async (data) => {
         setLoading(true)
-        if (post) {
-            const file = data.image[0] ? await appWriteServices.uploadFile(data.image[0]) : null
-
-
-            if (file) {
-                appWriteServices.deleteFile(post.featuredImage)
+        try {
+            if (post) {
+                const file = data.image[0] ? await appWriteServices.uploadFile(data.image[0]) : null
+    
+    
+                if (file) {
+                    appWriteServices.deleteFile(post.featuredImage)
+                }
+    
+                const dbPost = await appWriteServices.updatePost(post.$id, {
+                    ...data,
+                    featuredImage: file ? file.$id : post.featuredImage,
+                })
+    
+                if (dbPost) {
+                    navigate(`/post/${dbPost.$id}`)
+                    toast.success("Post is Updated")
+                }
+            } else {
+    
+                let fileId = null;
+                if (data.image?.[0]) {
+                    const file = await appWriteServices.uploadFile(data.image[0])
+                    fileId = file.$id;
+                }
+    
+                const dbPost = await appWriteServices.createPost({
+                    ...data,
+                    featuredImage: fileId,
+                    userId: userData.$id,
+                    username: userData.name
+                });
+    
+                if (dbPost) {
+                    navigate(`/post/${dbPost.$id}`)
+                    toast.success("Post is Created")
+                }
             }
-
-            const dbPost = await appWriteServices.updatePost(post.$id, {
-                ...data,
-                featuredImage: file ? file.$id : post.featuredImage,
-            })
-
-            if (dbPost) {
-                navigate(`/post/${dbPost.$id}`)
-                toast.success("Post is Updated")
-            }
-        } else {
-
-            let fileId = null;
-            if (data.image?.[0]) {
-                const file = await appWriteServices.uploadFile(data.image[0])
-                fileId = file.$id;
-            }
-
-            const dbPost = await appWriteServices.createPost({
-                ...data,
-                featuredImage: fileId,
-                userId: userData.$id,
-                username: userData.name
-            });
-
-            if (dbPost) {
-                navigate(`/post/${dbPost.$id}`)
-                toast.success("Post is Created")
-            }
-        }
+        } catch (error) {
+            console.error("Error occurs", error)
+            toast.error(error)
+        } finally{
         setLoading(false)
+        }
     }
 
     const slugTransform = useCallback((value) => {
