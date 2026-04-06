@@ -33,7 +33,7 @@ function PostForm({ post }) {
     
                 const dbPost = await appWriteServices.updatePost(post.id, {
                     ...data,
-                    featuredImage: file ? file.id : post.featuredImage,
+                    featuredImage: file ? file.path : post.featuredImage,
                 })
     
                 if (dbPost) {
@@ -42,15 +42,15 @@ function PostForm({ post }) {
                 }
             } else {
     
-                let fileId = null;
+                let filePath = null;
                 if (data.image?.[0]) {
                     const file = await appWriteServices.uploadFile(data.image[0])
-                    fileId = file.id;
+                    filePath = file.path;
                 }
     
                 const dbPost = await appWriteServices.createPost({
                     ...data,
-                    featuredImage: fileId,
+                    featuredImage: filePath,
                     userId: userData.id,
                     username: userData.name
                 });

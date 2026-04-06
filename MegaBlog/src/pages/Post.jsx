@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import appwriteService from "../appwrite/config";
+import appwriteService from "../supabase/config";
 import { Button, Container, LikeBtn } from "../components";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
@@ -15,17 +15,38 @@ export default function Post() {
 
     const isAuthor = post && userData ? post.userId === userData.$id : false;
 
+    const fetchImagePublicUrl = async (filePath) => {
+        try {
+            const publicUrl = await appwriteService.getFilePublicUrl(filePath)
+
+            if (!publicUrl) navigate("/")
+
+            return publicUrl
+        } catch (error) {
+            console.error(error)
+            toast.error("Error occurs")
+            navigate("/")
+        }
+    }
+
     useEffect(() => {
         if (slug) {
             appwriteService.getPost(slug).then((post) => {
-                if (post) setPost(post);
+                if (post) {
+                    const publicUrl = fetchImagePublicUrl(post.featuredImage)
+                    const postWithImagePublicUrl = {
+                        ...post,
+                        publicUrl
+                    }
+                    setPost(postWithImagePublicUrl);
+                }
                 else navigate("/");
             });
         } else navigate("/");
     }, [slug, navigate]);
 
     const deletePost = () => {
-        appwriteService.delete(post.$id).then((status) => {
+        appwriteService.deletePost(post.id).then((status) => {
             if (status) {
                 appwriteService.deleteFile(post.featuredImage);
                 toast.success("Post deleted!")
@@ -40,14 +61,14 @@ export default function Post() {
                 <div className="w-full flex flex-col gap-5 justify-center items-center mb-4 relative rounded-xl p-2">
                     <div className="relative flex justify-center items-center w-full h-[50vh] sm:h-[70vh] mb-8">
                         <img
-                            src={appwriteService.getFileDownload(post.featuredImage)}
+                            src={post.publicUrl}
                             alt={post.title}
                             className="w-full h-full object-cover rounded-xl"
                         />
                         <div className="absolute bottom-6 left-6 bg-black/70 text-white px-4 py-2 rounded-xl">
                             <h1 className="text-xl sm:text-3xl font-bold">{post.title}</h1>
                             <div className="flex items-center gap-3 mb-6 text-white text-sm">
-                                <span>By <strong>{post.userName || "Anonymous"}</strong></span>
+                                <span>By <strong>{post.username || "Anonymous"}</strong></span>
                                 <span>•</span>
                                 <span>{Math.round((new Date() - new Date(post.$createdAt)) / (1000 * 60 * 60 * 24))} days ago</span>
                                 {/* <span>{new Date(post.$createdAt).toLocaleDateString()}</span> */}

@@ -13,6 +13,8 @@ export class Service {
                 userId,
                 username
             })
+                .select()
+                .single()
 
             if (error) {
                 console.error("Error occurs while publishing post: ", error)
@@ -146,19 +148,33 @@ export class Service {
 
     async deleteFile(filePath) {
         try {
-            const { error } = await supabase
+            const { error, data } = await supabase
                 .storage
-                .from("featuredImage")
+                .from("featuredImages")
                 .remove([filePath])
 
             if (error) {
                 console.error("Error occurs while deleting file", error)
                 return false
             }
+
             return true
         } catch (error) {
             console.error("Unexpected error: ", error)
             return false
+        }
+    }
+
+    async getFilePublicUrl(filePath) {
+        try {
+            const { data } = supabase
+                .storage
+                .from("featuredImages")
+                .getPublicUrl(filePath)
+            return data.publicUrl
+        } catch (error) {
+            console.error("Unexpected error: ", error)
+            return null
         }
     }
 
