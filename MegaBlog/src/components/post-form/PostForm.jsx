@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import appWriteServices from '../../appwrite/config'
+import appWriteServices from '../../supabase/config'
 import { Button, Input, Loader, RTE } from '../index'
 import Select from '../Select'
 import { toast } from 'react-toastify'
@@ -27,18 +27,17 @@ function PostForm({ post }) {
             if (post) {
                 const file = data.image[0] ? await appWriteServices.uploadFile(data.image[0]) : null
     
-    
                 if (file) {
                     appWriteServices.deleteFile(post.featuredImage)
                 }
     
-                const dbPost = await appWriteServices.updatePost(post.$id, {
+                const dbPost = await appWriteServices.updatePost(post.id, {
                     ...data,
-                    featuredImage: file ? file.$id : post.featuredImage,
+                    featuredImage: file ? file.id : post.featuredImage,
                 })
     
                 if (dbPost) {
-                    navigate(`/post/${dbPost.$id}`)
+                    navigate(`/post/${dbPost.id}`)
                     toast.success("Post is Updated")
                 }
             } else {
@@ -46,18 +45,18 @@ function PostForm({ post }) {
                 let fileId = null;
                 if (data.image?.[0]) {
                     const file = await appWriteServices.uploadFile(data.image[0])
-                    fileId = file.$id;
+                    fileId = file.id;
                 }
     
                 const dbPost = await appWriteServices.createPost({
                     ...data,
                     featuredImage: fileId,
-                    userId: userData.$id,
+                    userId: userData.id,
                     username: userData.name
                 });
     
                 if (dbPost) {
-                    navigate(`/post/${dbPost.$id}`)
+                    navigate(`/post/${dbPost.id}`)
                     toast.success("Post is Created")
                 }
             }

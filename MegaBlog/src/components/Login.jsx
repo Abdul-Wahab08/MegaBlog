@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { login as storeLogin } from "../store/authSlice"
 import { Link, useNavigate } from 'react-router-dom'
 import { Input, Button, Logo, Loader } from "./index"
-import authService from "../appwrite/auth"
+import authService from "../supabase/auth"
+// import authService from '../appwrite/auth'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'

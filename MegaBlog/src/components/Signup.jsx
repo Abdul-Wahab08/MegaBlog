@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { login } from '../store/authSlice'
-import authService from '../appwrite/auth'
+import authService from '../supabase/auth'
+// import authService from '../appwrite/auth'
 import { useDispatch } from 'react-redux'
 import { Input, Button, Logo, Loader } from './index'
 import { Link, useNavigate } from 'react-router-dom'
@@ -18,9 +19,9 @@ function Signup() {
         setError("")
         setLoading(true)
         try {
-            const userData = await authService.createAccount(data)
-            if (userData) {
-                await authService.getCurrentUser()
+            const session = await authService.createAccount(data)
+            if (session) {
+                const userData = await authService.getCurrentUser()
                 if (userData) dispatch(login(userData))
                 toast.success("Your account created Successfully!")
                 navigate("/")

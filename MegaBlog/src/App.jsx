@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import authService from './appwrite/auth'
+import authService from './supabase/auth'
 import './App.css'
 import { useDispatch } from 'react-redux'
 import { login, logout } from "./store/authSlice"

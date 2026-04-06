@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button, Input, Loader, Logo } from '../components';
-import authService from '../appwrite/auth';
+import authService from '../supabase/auth';
 import { toast } from 'react-toastify';
 
 function ForgetPassword() {

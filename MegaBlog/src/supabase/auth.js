@@ -11,13 +11,14 @@ export class AuthService {
 
             if (error) {
                 console.error("Error occurs while creating user's account ", error)
-                return
+                return null
             }
 
             console.log("SignUp Data: ", data)
             return data
         } catch (error) {
             console.error("Unexpected error:", error)
+            return null
         }
     }
 
@@ -47,13 +48,14 @@ export class AuthService {
 
             if (error) {
                 console.error("Error occurs while logging in user ", error)
-                return
+                return null
             }
             console.log("getCurrentUser data: ", data)
-            return data.user
+            return data
 
         } catch (error) {
             console.error("Unexpected error:", error)
+            return null
         }
     }
 
@@ -71,6 +73,24 @@ export class AuthService {
         }
     }
 
+    async recoverPassword(email) {
+        try {
+            const { error, data } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/reset-password`
+            })
+
+            if (error) {
+                console.error("Error occurs during password recovery ", error)
+                return null
+            }
+
+            return data
+        } catch (error) {
+            console.error("Unexpected error:", error)
+            return null
+        }
+    }
+
     async resetPassword({ newPassword }) {
         try {
             const { data, error } = await supabase.auth.updateUser({ password: newPassword })
@@ -80,7 +100,7 @@ export class AuthService {
                 return
             }
 
-            console.log("ReselPassword Data: ", data)
+            console.log("ResetPassword Data: ", data)
             return data
 
         } catch (error) {

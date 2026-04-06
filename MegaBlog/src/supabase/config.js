@@ -39,6 +39,8 @@ export class Service {
                     status
                 })
                 .eq("slug", slug)
+                .select()
+                .single()
 
             if (error) {
                 console.error("Error occurs while publishing post: ", error)
@@ -78,6 +80,7 @@ export class Service {
                 .from("posts")
                 .select()
                 .eq("slug", slug)
+                .single()
 
             if (error) {
                 console.error("Error occurs while publishing post: ", error)
@@ -122,18 +125,19 @@ export class Service {
 
             if (error) {
                 console.error("Error occurs while uploading file", error)
-                return
+                return null
             }
 
             console.log("File Uploading data: ", fileUploadData)
+            return fileUploadData
 
-            const { data } = supabase
-                .storage
-                .from("featuredImage")
-                .getPublicUrl(filePath)
-            console.log("FeaturedImage public url fetched data:  ", data)
+            // const { data } = supabase
+            //     .storage
+            //     .from("featuredImage")
+            //     .getPublicUrl(filePath)
+            // console.log("FeaturedImage public url fetched data:  ", data)
 
-            return data.publicUrl
+            // return data.publicUrl
         } catch (error) {
             console.error("Unexpected error: ", error)
             return null
