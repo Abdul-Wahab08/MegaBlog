@@ -70,28 +70,28 @@ export class AuthService {
 
         } catch (error) {
             console.error("Unexpected error:", error)
+            return
         }
     }
 
     async recoverPassword(email) {
         try {
-            const { error, data } = await supabase.auth.resetPasswordForEmail(email, {
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: `${window.location.origin}/reset-password`
             })
 
             if (error) {
                 console.error("Error occurs during password recovery ", error)
-                return null
+                return
             }
 
-            return data
         } catch (error) {
             console.error("Unexpected error:", error)
-            return null
+            return 
         }
     }
 
-    async resetPassword({ newPassword }) {
+    async resetPassword( newPassword ) {
         try {
             const { data, error } = await supabase.auth.updateUser({ password: newPassword })
 

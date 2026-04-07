@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import appWriteService from "../appwrite/config"
+import { useEffect, useState } from 'react'
+import service from "../supabase/config"
 import { Container, PostCard } from "../components"
 
 function AllPosts() {
     const [posts, setPosts] = useState([])
     useEffect(() => { }, [])
-    appWriteService.getPosts([]).then((posts) => {
+    service.getPosts([]).then((posts) => {
         if (posts) {
-            setPosts(posts.documents)
+            setPosts(posts)
         }
     })
     return (
@@ -15,7 +15,7 @@ function AllPosts() {
             <Container>
                 <div className='flex flex-wrap'>
                     {posts.length !== 0 ? posts.map((post) => (
-                        <div key={post.$id} className='p-2 w-full sm:w-1/4'>
+                        <div key={post.id} className='p-2 w-full sm:w-1/4'>
                             <PostCard {...post} />
                         </div>
                     )) : ""}

@@ -148,7 +148,7 @@ export class Service {
 
     async deleteFile(filePath) {
         try {
-            const { error, data } = await supabase
+            const { error } = await supabase
                 .storage
                 .from("featuredImages")
                 .remove([filePath])

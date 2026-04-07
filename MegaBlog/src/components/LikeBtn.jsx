@@ -1,34 +1,45 @@
 import React, { useState, useEffect } from 'react'
-import appWriteServices from '../appwrite/config'
+import services from '../supabase/config'
+import { toast } from 'react-toastify'
 
 function LikeBtn({ postId, user }) {
     const [liked, setLiked] = useState(false)
     const [count, setCount] = useState(0)
 
     useEffect(() => {
-        const loadLikes = async () => {
-            const totalCount = await appWriteServices.likesCount(postId)
-            setCount(totalCount);
-            if (user && user.$id) {
-                const hasLiked = await appWriteServices.userLikedPost(postId, user.$id)
-                setLiked(hasLiked);
-            } else {
-                setLiked(false)
+        try {
+            const loadLikes = async () => {
+                const totalCount = await services.likesCount(postId)
+                setCount(totalCount);
+                if (user && user.$id) {
+                    const hasLiked = await services.userLikedPost(postId, user.id)
+                    setLiked(hasLiked);
+                } else {
+                    setLiked(false)
+                }
             }
+        } catch (error) {
+            console.error(error)
         }
         loadLikes();
     }, [postId, user])
 
 
     const handleLike = async () => {
-        if (liked) {
-            await appWriteServices.unlikePost(postId, user.$id)
-            setLiked(false);
-            setCount(count - 1)
-        } else {
-            await appWriteServices.likePost(postId, user.$id)
-            setLiked(true)
-            setCount(count + 1);
+        try {
+            if (liked) {
+                const isvalidLikes = await services.unlikePost(postId, user.id)
+                if (isvalidLikes) {
+                    setLiked(false);
+                    setCount(count - 1)
+                }
+            } else {
+                await services.likePost(postId, user.id)
+                setLiked(true)
+                setCount(count + 1);
+            }
+        } catch (error) {
+            console.error(error)
         }
     }
     return (

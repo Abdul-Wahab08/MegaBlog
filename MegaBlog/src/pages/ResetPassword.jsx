@@ -3,28 +3,37 @@ import { useForm } from 'react-hook-form'
 import { Button, Input, Loader, Logo } from '../components';
 import authService from '../supabase/auth';
 import { toast } from 'react-toastify';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function ResetPassword() {
     const { register, handleSubmit, reset } = useForm();
-    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false)
 
-    const userId = searchParams.get("userId")
-    const secret = searchParams.get("secret")
-
     const handleResetPass = async (data) => {
         setLoading(true)
+
+        if (data.password !== data.confirmPassword) {
+            toast.error("Both New and confirm password field must be same")
+            setLoading(false)
+            return
+        }
+
         try {
-            await authService.resetPassword(userId, secret, data.password, data.confirmPassword)
-            toast.success("Password reset successful! Please log in.")
+            const response = await authService.resetPassword(data.password)
+
+            if (!response.user) {
+                toast.error("Reset Password failed")
+                navigate("/")
+                return
+            }
+            toast.success("Password reset successfull! Please log in.")
             reset();
             navigate("/login")
         } catch (error) {
             toast.error(error.message || "Password reset failed.")
         } finally {
-            setLoading(true)
+            setLoading(false)
         }
     }
 
@@ -43,7 +52,7 @@ function ResetPassword() {
                             <Input label="New Password: " placeholder="Enter new Password" type="password" {...register("password", {
                                 required: true,
                             })} />
-                            <Input label="Confirm Password: " placeholder="Confirm new Password" type="password" {...register("conformPassword", {
+                            <Input label="Confirm Password: " placeholder="Confirm new Password" type="password" {...register("confirmPassword", {
                                 required: true,
                             })} />
                             <Button type='submit' className='w-full'>Reset Password</Button>
