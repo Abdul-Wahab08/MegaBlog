@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import appwriteService from "../supabase/config";
+import service from "../supabase/config";
 import { Button, Container, LikeBtn } from "../components";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
@@ -13,11 +13,11 @@ export default function Post() {
 
     const userData = useSelector((state) => state.auth.userData);
 
-    const isAuthor = post && userData ? post.userId === userData.$id : false;
+    const isAuthor = post && userData ? post.userId === userData.id : false;
 
     const fetchImagePublicUrl = async (filePath) => {
         try {
-            const publicUrl = await appwriteService.getFilePublicUrl(filePath)
+            const publicUrl = await service.getFilePublicUrl(filePath)
 
             if (!publicUrl) navigate("/")
 
@@ -31,7 +31,7 @@ export default function Post() {
 
     useEffect(() => {
         if (slug) {
-            appwriteService.getPost(slug).then((post) => {
+            service.getPost(slug).then((post) => {
                 if (post) {
                     const publicUrl = fetchImagePublicUrl(post.featuredImage)
                     const postWithImagePublicUrl = {
@@ -46,9 +46,9 @@ export default function Post() {
     }, [slug, navigate]);
 
     const deletePost = () => {
-        appwriteService.deletePost(post.id).then((status) => {
+        service.deletePost(post.id).then((status) => {
             if (status) {
-                appwriteService.deleteFile(post.featuredImage);
+                service.deleteFile(post.featuredImage);
                 toast.success("Post deleted!")
                 navigate("/");
             }
@@ -70,12 +70,12 @@ export default function Post() {
                             <div className="flex items-center gap-3 mb-6 text-white text-sm">
                                 <span>By <strong>{post.username || "Anonymous"}</strong></span>
                                 <span>•</span>
-                                <span>{Math.round((new Date() - new Date(post.$createdAt)) / (1000 * 60 * 60 * 24))} days ago</span>
+                                <span>{Math.round((new Date() - new Date(post.createdAt)) / (1000 * 60 * 60 * 24))} days ago</span>
                                 {/* <span>{new Date(post.$createdAt).toLocaleDateString()}</span> */}
                             </div>
                             {isAuthor && (
                                 <div className="flex justify-center items-center ">
-                                    <Link to={`/edit-post/${post.$id}`}>
+                                    <Link to={`/edit-post/${post.id}`}>
                                         <Button bgColor="bg-green-500 " className="mr-3 hover:bg-green-400">
                                             Edit
                                         </Button>

@@ -1,7 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import authService from "../../supabase/auth"
-// import authService from '../../appwrite/auth'
 import { logout } from "../../store/authSlice"
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'

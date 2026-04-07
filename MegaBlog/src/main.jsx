@@ -12,7 +12,6 @@ import AllPosts from "./pages/AllPosts.jsx"
 import AddPost from "./pages/AddPost.jsx"
 import EditPost from "./pages/EditPost.jsx"
 import Post from "./pages/Post.jsx"
-import { toast } from "react-toastify";
 import { ToastContainer } from 'react-toastify'
 import ForgetPassword from './pages/ForgetPassword.jsx'
 import ResetPassword from './pages/ResetPassword.jsx'

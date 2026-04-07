@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { login } from '../store/authSlice'
 import authService from '../supabase/auth'
-// import authService from '../appwrite/auth'
 import { useDispatch } from 'react-redux'
 import { Input, Button, Logo, Loader } from './index'
 import { Link, useNavigate } from 'react-router-dom'

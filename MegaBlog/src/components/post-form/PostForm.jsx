@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import appWriteServices from '../../supabase/config'
+import services from '../../supabase/config'
 import { Button, Input, Loader, RTE } from '../index'
 import Select from '../Select'
 import { toast } from 'react-toastify'
@@ -25,13 +25,13 @@ function PostForm({ post }) {
         setLoading(true)
         try {
             if (post) {
-                const file = data.image[0] ? await appWriteServices.uploadFile(data.image[0]) : null
+                const file = data.image[0] ? await services.uploadFile(data.image[0]) : null
     
                 if (file) {
-                    appWriteServices.deleteFile(post.featuredImage)
+                    services.deleteFile(post.featuredImage)
                 }
     
-                const dbPost = await appWriteServices.updatePost(post.id, {
+                const dbPost = await services.updatePost(post.id, {
                     ...data,
                     featuredImage: file ? file.path : post.featuredImage,
                 })
@@ -44,11 +44,11 @@ function PostForm({ post }) {
     
                 let filePath = null;
                 if (data.image?.[0]) {
-                    const file = await appWriteServices.uploadFile(data.image[0])
+                    const file = await services.uploadFile(data.image[0])
                     filePath = file.path;
                 }
     
-                const dbPost = await appWriteServices.createPost({
+                const dbPost = await services.createPost({
                     ...data,
                     featuredImage: filePath,
                     userId: userData.id,
@@ -101,9 +101,9 @@ function PostForm({ post }) {
                 </div>
                 <div className='w-full md:w-1/3 px-2'>
                     <Input label="Featured Image" type="file" className="my-2 mb-4" accept="image/png, image/jpg, image/jpeg, image/gif" {...register('image', { required: !post })} />
-                    {post && (<div className="w-full mb-4">
-                        <img className='rounded-lg' src={appWriteServices.getFileDownload(post.featuredImage)} alt={post.title} />
-                    </div>)}
+                    {/* {post && (<div className="w-full mb-4">
+                        <img className='rounded-lg' src={services.getFileDownload(post.featuredImage)} alt={post.title} />
+                    </div>)} */}
                     <Select options={["active", "inactive"]} label="Status" {...register("status", { required: true })} />
                     <Button type="submit" bgColor={post ? "bg-green-600" : undefined} className="w-full my-4" >
                         {post ? "Update" : "Submit"}

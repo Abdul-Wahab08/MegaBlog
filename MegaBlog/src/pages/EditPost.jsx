@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import appWriteService from "../supabase/config"
+import service from "../supabase/config"
 import { Container, PostForm } from "../components"
 import { useParams, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -14,7 +14,7 @@ function EditPost() {
 
         const fetchPost = async () => {
             try {
-                const post = await appWriteService.getPost(slug)
+                const post = await service.getPost(slug)
 
                 if (post) {
                     setPost(post)

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import appWriteService from "../appwrite/config"
+import service from "../supabase/config"
 import { Container, PostCard } from '../components'
 import { Link } from 'react-router-dom'
 
 function Home() {
     const [posts, setPosts] = useState([])
     useEffect(() => {
-        appWriteService.getPosts().then((posts) => {
+        service.getPosts().then((posts) => {
             if (posts) {
-                setPosts(posts.documents)
+                setPosts(posts)
             }
         })
     }, [])
@@ -36,7 +36,7 @@ function Home() {
                 <Container>
                     <div className='flex flex-wrap'>
                         {posts.map((post) => (
-                            <div key={post.$id} className='p-2 w-full sm:w-1/4'>
+                            <div key={post.id} className='p-2 w-full sm:w-1/4'>
                                 <PostCard {...post} />
                             </div>
                         ))}

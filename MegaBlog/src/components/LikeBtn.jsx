@@ -11,7 +11,7 @@ function LikeBtn({ postId, user }) {
             const loadLikes = async () => {
                 const totalCount = await services.likesCount(postId)
                 setCount(totalCount);
-                if (user && user.$id) {
+                if (user && user.id) {
                     const hasLiked = await services.userLikedPost(postId, user.id)
                     setLiked(hasLiked);
                 } else {
