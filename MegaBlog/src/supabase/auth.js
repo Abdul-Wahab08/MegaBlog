@@ -2,19 +2,35 @@ import supabase from "../utils/supabase";
 
 export class AuthService {
 
-    async createAccount({ email, password }) {
+    async createAccount({ email, password, username }) {
         try {
+            console.log(username)
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
+                options: {
+                    data: {username}
+                }
             })
+            console.log("SignUp Data: ", data, error)
 
             if (error) {
                 console.error("Error occurs while creating user's account ", error)
                 return null
             }
+           
+            // const { data: saveUsernameData, error: saveUsernameError } = await supabase
+            // .from("accounts")
+            // .update({username})
+            // .eq("id", data.user.id)
 
-            console.log("SignUp Data: ", data)
+            //   if(saveUsernameError){
+            //     console.error("Error occurs while creating user's account ", saveUsernameError)
+            //     return null 
+            // }
+
+            // console.log("UsernameSavingData: ", saveUsernameData)      
+
             return data
         } catch (error) {
             console.error("Unexpected error:", error)

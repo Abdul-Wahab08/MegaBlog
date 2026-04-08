@@ -18,7 +18,11 @@ function Signup() {
         setError("")
         setLoading(true)
         try {
-            const session = await authService.createAccount(data)
+            const session = await authService.createAccount({
+                email: data.email,
+                password: data.password,
+                username: data.username
+            })
             if (session) {
                 const userData = await authService.getCurrentUser()
                 if (userData) dispatch(login(userData))
@@ -51,7 +55,7 @@ function Signup() {
                 {error && <p className='text-red-600 text-center mt-8'>{error}</p>}
                 <form onSubmit={handleSubmit(create)}>
                     <div className='space-y-5'>
-                        <Input label="Full Name:" className="w-[30vw]" placeholder="Enter your Name" type="text" {...register("name", {
+                        <Input label="Full Name:" className="w-[30vw]" placeholder="Enter your Name" type="text" {...register("username", {
                             required: true,
                         })} />
                         <Input label="Email:" placeholder="Enter your Email" type="email" {...register("email", {
