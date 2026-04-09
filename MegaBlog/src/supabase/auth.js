@@ -9,7 +9,7 @@ export class AuthService {
                 email,
                 password,
                 options: {
-                    data: {username}
+                    data: { username }
                 }
             })
             console.log("SignUp Data: ", data, error)
@@ -18,7 +18,7 @@ export class AuthService {
                 console.error("Error occurs while creating user's account ", error)
                 return null
             }
-           
+
             // const { data: saveUsernameData, error: saveUsernameError } = await supabase
             // .from("accounts")
             // .update({username})
@@ -75,6 +75,22 @@ export class AuthService {
         }
     }
 
+    async getSession() {
+        try {
+            const { data, error } = await supabase.auth.getSession()
+
+            if (error) {
+                console.error("Error occurs while fetching sessions ", error)
+                return null
+            }
+
+            return data
+        } catch (error) {
+            console.error("Unexpected error:", error)
+            return null
+        }
+    }
+
     async logout() {
         try {
             const { error } = await supabase.auth.signOut()
@@ -103,11 +119,11 @@ export class AuthService {
 
         } catch (error) {
             console.error("Unexpected error:", error)
-            return 
+            return
         }
     }
 
-    async resetPassword( newPassword ) {
+    async resetPassword(newPassword) {
         try {
             const { data, error } = await supabase.auth.updateUser({ password: newPassword })
 

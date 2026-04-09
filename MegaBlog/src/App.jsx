@@ -9,10 +9,8 @@ import { Outlet } from 'react-router-dom'
 function App() {
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
-  const status = useSelector((state) => state.auth.status)
 
   useEffect(() => {
-    if (status) {
       setLoading(true)
       authService.getCurrentUser()
         .then((userData) => {
@@ -23,7 +21,6 @@ function App() {
           }
         })
         .finally(() => setLoading(false))
-    }
   }, [])
 
   return !loading ? (
