@@ -3,7 +3,7 @@ import service from '../supabase/config'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-function PostCard({ id, title, featuredImageUrl, createdAt }) {
+function PostCard({ id, title, featuredImageUrl, createdAt, slug }) {
   const [imageUrl, setImageUrl] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0CMibFlRVj46jf-9KmrMpptMMOuQgm5uSHg&s")
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function PostCard({ id, title, featuredImageUrl, createdAt }) {
   }, [])
 
   return (
-    <Link to={`/post/${id}`}>
+    <Link to={`/post/${slug}`}>
       <div className='w-full h-full bg-gray-100 rounded-xl p-4'>
         <div className='w-full justify-center mb-2'>
           <img className='rounded-xl h-1/4 w-full' src={imageUrl} alt={title} />

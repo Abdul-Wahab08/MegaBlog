@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 
 export default function Post() {
     const [post, setPost] = useState(null);
+    const[postImageUrl, setPostImageUrl] = useState('')
     const { slug } = useParams();
     const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ export default function Post() {
 
             if (!publicUrl) navigate("/")
 
-            return publicUrl
+          setPostImageUrl(publicUrl)
         } catch (error) {
             console.error(error)
             toast.error("Error occurs")
@@ -33,7 +34,7 @@ export default function Post() {
         if (slug) {
             service.getPost(slug).then((post) => {
                 if (post) {
-                    const publicUrl = fetchImagePublicUrl(post.featuredImage)
+                    const publicUrl = fetchImagePublicUrl(post.featuredImageUrl)
                     const postWithImagePublicUrl = {
                         ...post,
                         publicUrl
@@ -61,7 +62,7 @@ export default function Post() {
                 <div className="w-full flex flex-col gap-5 justify-center items-center mb-4 relative rounded-xl p-2">
                     <div className="relative flex justify-center items-center w-full h-[50vh] sm:h-[70vh] mb-8">
                         <img
-                            src={post.publicUrl}
+                            src={postImageUrl}
                             alt={post.title}
                             className="w-full h-full object-cover rounded-xl"
                         />

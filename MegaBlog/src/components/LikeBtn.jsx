@@ -7,20 +7,20 @@ function LikeBtn({ postId, user }) {
     const [count, setCount] = useState(0)
 
     useEffect(() => {
-        try {
             const loadLikes = async () => {
-                const totalCount = await services.likesCount(postId)
-                setCount(totalCount);
-                if (user && user.id) {
-                    const hasLiked = await services.userLikedPost(postId, user.id)
-                    setLiked(hasLiked);
-                } else {
-                    setLiked(false)
-                }
+               try {
+                 const totalCount = await services.likesCount(postId)
+                 setCount(totalCount);
+                 if (user && user.id) {
+                     const hasLiked = await services.userLikedPost(postId, user.id)
+                     setLiked(hasLiked);
+                 } else {
+                     setLiked(false)
+                 }
+               } catch (error) {
+                console.error(error)
+               }
             }
-        } catch (error) {
-            console.error(error)
-        }
         loadLikes();
     }, [postId, user])
 

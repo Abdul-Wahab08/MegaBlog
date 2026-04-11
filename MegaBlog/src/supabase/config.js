@@ -236,7 +236,7 @@ export class Service {
     async likesCount(postId) {
         try {
             const { count, error } = await supabase
-                .from("postId")
+                .from("likes")
                 .select("*", { count: "exact", head: true })
                 .eq("postId", postId)
 
