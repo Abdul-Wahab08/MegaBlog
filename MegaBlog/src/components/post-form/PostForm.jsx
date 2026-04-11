@@ -33,7 +33,7 @@ function PostForm({ post }) {
     
                 const dbPost = await services.updatePost(post.id, {
                     ...data,
-                    featuredImage: file ? file.path : post.featuredImage,
+                    featuredImageUrl: file ? file.path : post.featuredImage,
                 })
     
                 if (dbPost) {
@@ -50,9 +50,9 @@ function PostForm({ post }) {
     
                 const dbPost = await services.createPost({
                     ...data,
-                    featuredImage: filePath,
-                    userId: userData.id,
-                    username: userData.name
+                    featuredImageUrl: filePath,
+                    userId: userData.user.id,
+                    username: userData.user.user_metadata.username
                 });
     
                 if (dbPost) {

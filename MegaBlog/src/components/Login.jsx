@@ -12,7 +12,7 @@ function Login() {
     const navigate = useNavigate()
     const [error, setError] = useState(null)
     const { register, handleSubmit } = useForm()
-    const[loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const login = async (data) => {
         setError("")
@@ -27,7 +27,7 @@ function Login() {
             }
         } catch (error) {
             toast.error(error.message)
-        }finally{
+        } finally {
             setLoading(false)
         }
     }
@@ -63,7 +63,7 @@ function Login() {
                             required: true,
                         })} />
                         <Button type='submit' className='w-full'>Sign In</Button>
-                         <Link to="/forget-password" className="font-medium text-primary transition-all duration-200 hover:underline">Forget Password ?</Link>
+                        <Link to="/forget-password" className="font-medium text-primary transition-all duration-200 hover:underline">Forget Password ?</Link>
                     </div>
                 </form>
             </div>

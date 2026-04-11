@@ -4,6 +4,7 @@ export class Service {
 
     async createPost({ title, content, featuredImageUrl, status, slug, userId, username }) {
         try {
+            console.log({ title, content, featuredImageUrl, status, slug, userId, username })
             const { data, error } = await supabase.from("posts").insert({
                 title,
                 content,
@@ -16,6 +17,7 @@ export class Service {
                 .select()
                 .single()
 
+                console.log(data)
             if (error) {
                 console.error("Error occurs while publishing post: ", error)
                 return null
@@ -85,7 +87,7 @@ export class Service {
                 .single()
 
             if (error) {
-                console.error("Error occurs while publishing post: ", error)
+                console.error("Error occurs while fetching post: ", error)
                 return null
             }
 
@@ -171,6 +173,7 @@ export class Service {
                 .storage
                 .from("featuredImages")
                 .getPublicUrl(filePath)
+                
             return data.publicUrl
         } catch (error) {
             console.error("Unexpected error: ", error)

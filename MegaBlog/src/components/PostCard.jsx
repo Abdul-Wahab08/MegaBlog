@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import service from '../supabase/config'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-function PostCard({ id, title, featuredImage, createdAt }) {
+function PostCard({ id, title, featuredImageUrl, createdAt }) {
   const [imageUrl, setImageUrl] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0CMibFlRVj46jf-9KmrMpptMMOuQgm5uSHg&s")
 
   useEffect(() => {
     const fetchPostimagePublicUrl = async () => {
       try {
-        const publicUrl = await service.getFilePublicUrl(featuredImage)
+        const publicUrl = await service.getFilePublicUrl(featuredImageUrl)
 
         if (!publicUrl) {
           toast.error("Post's image not found")
@@ -24,7 +24,7 @@ function PostCard({ id, title, featuredImage, createdAt }) {
     }
 
     fetchPostimagePublicUrl()
-  }, [featuredImage])
+  }, [])
 
   return (
     <Link to={`/post/${id}`}>

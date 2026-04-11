@@ -8,11 +8,13 @@ function Home() {
     const [posts, setPosts] = useState([])
     const status = useSelector((state) => state.auth.status)
     useEffect(() => {
+        if(status){
             service.getPosts().then((posts) => {
                 if (posts) {
                     setPosts(posts)
                 }
             })
+        }
     }, [])
 
 
