@@ -91,7 +91,6 @@ export class Service {
                 return null
             }
 
-            console.log("Fetched post Data: ", data)
             return data
         } catch (error) {
             console.error("Unexpected error: ", error)

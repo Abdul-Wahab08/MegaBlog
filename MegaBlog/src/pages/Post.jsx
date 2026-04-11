@@ -7,39 +7,25 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 export default function Post() {
-    const [post, setPost] = useState(null);
-    const[postImageUrl, setPostImageUrl] = useState('')
+    const [post, setPost] = useState();
+    const [postImageUrl, setPostImageUrl] = useState('')
     const { slug } = useParams();
     const navigate = useNavigate();
 
     const userData = useSelector((state) => state.auth.userData);
 
-    const isAuthor = post && userData ? post.userId === userData.id : false;
-
-    const fetchImagePublicUrl = async (filePath) => {
-        try {
-            const publicUrl = await service.getFilePublicUrl(filePath)
-
-            if (!publicUrl) navigate("/")
-
-          setPostImageUrl(publicUrl)
-        } catch (error) {
-            console.error(error)
-            toast.error("Error occurs")
-            navigate("/")
-        }
-    }
+    const isAuthor = post && userData ? post.userId === userData.user.id : false;
 
     useEffect(() => {
         if (slug) {
             service.getPost(slug).then((post) => {
                 if (post) {
-                    const publicUrl = fetchImagePublicUrl(post.featuredImageUrl)
-                    const postWithImagePublicUrl = {
-                        ...post,
-                        publicUrl
-                    }
-                    setPost(postWithImagePublicUrl);
+                    service.getFilePublicUrl(post.featuredImageUrl).then((featuredImagePublicUrl) => {
+                        if (featuredImagePublicUrl) {
+                            setPostImageUrl(featuredImagePublicUrl)
+                        }
+                    })
+                    setPost(post);
                 }
                 else navigate("/");
             });
@@ -47,11 +33,20 @@ export default function Post() {
     }, [slug, navigate]);
 
     const deletePost = () => {
-        service.deletePost(post.id).then((status) => {
+        service.deletePost(post.slug).then((status) => {
             if (status) {
-                service.deleteFile(post.featuredImage);
-                toast.success("Post deleted!")
-                navigate("/");
+                console.log("Status: ", status)
+                service.deleteFile(post.featuredImageUrl).then((isDeleted) => {
+                    if (isDeleted) {
+                        console.log("isDeleted", isDeleted)
+                        toast.success("Post deleted!")
+                        navigate("/");
+                    } else {
+                        toast.error("Post Deletion Fails")
+                    }
+                });
+            } else {
+                toast.error("Post Deletion Fails")
             }
         });
     };
@@ -62,7 +57,7 @@ export default function Post() {
                 <div className="w-full flex flex-col gap-5 justify-center items-center mb-4 relative rounded-xl p-2">
                     <div className="relative flex justify-center items-center w-full h-[50vh] sm:h-[70vh] mb-8">
                         <img
-                            src={postImageUrl}
+                            src={postImageUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0CMibFlRVj46jf-9KmrMpptMMOuQgm5uSHg&s"}
                             alt={post.title}
                             className="w-full h-full object-cover rounded-xl"
                         />
