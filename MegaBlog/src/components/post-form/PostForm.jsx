@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -17,6 +17,7 @@ function PostForm({ post }) {
         }
     })
     const [loading, setLoading] = useState(false)
+    const [imagePublicUrl, setImagePublicUrl] = useState(null)
 
     const navigate = useNavigate()
     const userData = useSelector((state) => state.auth.userData)
@@ -26,47 +27,57 @@ function PostForm({ post }) {
         try {
             if (post) {
                 const file = data.image[0] ? await services.uploadFile(data.image[0]) : null
-    
+
                 if (file) {
-                    services.deleteFile(post.featuredImage)
+                    services.deleteFile(post.featuredImageUrl)
                 }
-    
-                const dbPost = await services.updatePost(post.id, {
+
+                const dbPost = await services.updatePost(post.slug, {
                     ...data,
-                    featuredImageUrl: file ? file.path : post.featuredImage,
+                    featuredImageUrl: file ? file.path : post.featuredImageUrl,
                 })
-    
+
                 if (dbPost) {
-                    navigate(`/post/${dbPost.id}`)
+                    navigate(`/post/${dbPost.slug}`)
                     toast.success("Post is Updated")
                 }
             } else {
-    
+
                 let filePath = null;
                 if (data.image?.[0]) {
                     const file = await services.uploadFile(data.image[0])
                     filePath = file.path;
                 }
-    
+
                 const dbPost = await services.createPost({
                     ...data,
                     featuredImageUrl: filePath,
                     userId: userData.user.id,
                     username: userData.user.user_metadata.username
                 });
-    
+
                 if (dbPost) {
-                    navigate(`/post/${dbPost.id}`)
+                    navigate(`/post/${dbPost.slug}`)
                     toast.success("Post is Created")
                 }
             }
         } catch (error) {
             console.error("Error occurs", error)
             toast.error(error)
-        } finally{
-        setLoading(false)
+        } finally {
+            setLoading(false)
         }
     }
+
+    useEffect(()=>{
+        if(post){
+                services.getFilePublicUrl(post.featuredImageUrl).then((publicUrl) => {
+                    if (publicUrl) {
+                        setImagePublicUrl(publicUrl)
+                    }
+                })
+            }
+    }, [ navigate, post])
 
     const slugTransform = useCallback((value) => {
         if (value && typeof value === "string") {
@@ -101,9 +112,9 @@ function PostForm({ post }) {
                 </div>
                 <div className='w-full md:w-1/3 px-2'>
                     <Input label="Featured Image" type="file" className="my-2 mb-4" accept="image/png, image/jpg, image/jpeg, image/gif" {...register('image', { required: !post })} />
-                    {/* {post && (<div className="w-full mb-4">
-                        <img className='rounded-lg' src={services.getFileDownload(post.featuredImage)} alt={post.title} />
-                    </div>)} */}
+                    {post && imagePublicUrl && (<div className="w-full mb-4">
+                        <img className='rounded-lg' src={imagePublicUrl} alt={post.title} />
+                    </div>)}
                     <Select options={["active", "inactive"]} label="Status" {...register("status", { required: true })} />
                     <Button type="submit" bgColor={post ? "bg-green-600" : undefined} className="w-full my-4" >
                         {post ? "Update" : "Submit"}

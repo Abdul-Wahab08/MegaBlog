@@ -71,7 +71,7 @@ export default function Post() {
                             </div>
                             {isAuthor && (
                                 <div className="flex justify-center items-center ">
-                                    <Link to={`/edit-post/${post.id}`}>
+                                    <Link to={`/edit-post/${post.slug}`}>
                                         <Button bgColor="bg-green-500 " className="mr-3 hover:bg-green-400">
                                             Edit
                                         </Button>
