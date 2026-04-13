@@ -47,7 +47,8 @@ export class AuthService {
 
             if (error) {
                 console.error("Error occurs while logging in user ", error)
-                return
+                console.log(error)
+                return error
             }
 
             console.log("SignIn Data", data)
@@ -55,6 +56,7 @@ export class AuthService {
 
         } catch (error) {
             console.error("Unexpected error:", error)
+            return null
         }
     }
 
@@ -108,18 +110,19 @@ export class AuthService {
 
     async recoverPassword(email) {
         try {
-            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            const { error, data } = await supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: `${window.location.origin}/reset-password`
             })
 
             if (error) {
                 console.error("Error occurs during password recovery ", error)
-                return
+                return false
             }
 
+            return true
         } catch (error) {
             console.error("Unexpected error:", error)
-            return
+            return false
         }
     }
 
@@ -128,8 +131,8 @@ export class AuthService {
             const { data, error } = await supabase.auth.updateUser({ password: newPassword })
 
             if (error) {
-                console.error("Error occurs during logout ", error)
-                return
+                console.error("Error occurs during password reset: ", error)
+                return null
             }
 
             console.log("ResetPassword Data: ", data)
@@ -137,6 +140,26 @@ export class AuthService {
 
         } catch (error) {
             console.error("Unexpected error:", error)
+            return null
+        }
+    }
+
+    async verifyCodeForPasswordRecovery(token_hash){
+        try {
+          const {data, error} = await supabase.auth.verifyOtp({
+            token_hash,
+            type: "recovery"
+          })  
+
+           if (error) {
+                console.error("Error occurs during verification of Code for password recovery: ", error)
+                return null
+            }
+
+            return data
+        } catch (error) {
+            console.error("Unexpected error:", error)
+            return null
         }
     }
 

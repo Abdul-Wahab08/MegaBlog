@@ -44,17 +44,17 @@ const router = createBrowserRouter([
       {
         path: "/forget-password",
         element: (
-          <AuthLayout authentication={false}>
+          
             <ForgetPassword />
-          </AuthLayout>
+          
         )
       },
       {
         path: "/reset-password",
         element: (
-          <AuthLayout authentication={false}>
+         
             <ResetPassword />
-          </AuthLayout>
+          
         )
       },
       {

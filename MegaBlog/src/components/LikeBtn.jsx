@@ -12,7 +12,7 @@ function LikeBtn({ postId, user }) {
                  const totalCount = await services.likesCount(postId)
                  setCount(totalCount);
                  if (user && user.id) {
-                     const hasLiked = await services.userLikedPost(postId, user.id)
+                     const hasLiked = await services.userLikedPost(postId, user.user.id)
                      setLiked(hasLiked);
                  } else {
                      setLiked(false)
@@ -28,13 +28,13 @@ function LikeBtn({ postId, user }) {
     const handleLike = async () => {
         try {
             if (liked) {
-                const isvalidLikes = await services.unlikePost(postId, user.id)
+                const isvalidLikes = await services.unlikePost(postId, user.user.id)
                 if (isvalidLikes) {
                     setLiked(false);
                     setCount(count - 1)
                 }
             } else {
-                await services.likePost(postId, user.id)
+                await services.likePost(postId, user.user.id)
                 setLiked(true)
                 setCount(count + 1);
             }

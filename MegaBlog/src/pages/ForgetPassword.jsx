@@ -11,9 +11,13 @@ function ForgetPassword() {
     const handleForgetPass = async (data) => {
         setLoading(true)
         try {
-            await authService.recoverPassword(data.email)
-            toast.success("Password recovery email sent!");
-            reset();
+            const response = await authService.recoverPassword(data.email)
+            if (response) {
+                toast.success("Password recovery email sent!");
+                reset();
+            } else {
+                toast.error("Password recovery email failed to send!")
+            }
         } catch (error) {
             toast.error(error.message || "Error sending recovery email.");
         } finally {

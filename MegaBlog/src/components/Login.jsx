@@ -18,12 +18,16 @@ function Login() {
         setError("")
         setLoading(true)
         try {
-            const session = await authService.login(data)
-            if (session) {
+            const response = await authService.login(data)
+            if (response.session) {
                 const userData = await authService.getCurrentUser()
-                if (userData) dispatch(storeLogin(userData));
-                toast.success("Login SuccessFull")
-                navigate("/")
+                if (userData) {
+                    dispatch(storeLogin(userData));
+                    toast.success("Login SuccessFull")
+                    navigate("/")
+                }
+            } else {
+                toast.error(response.message)
             }
         } catch (error) {
             toast.error(error.message)
