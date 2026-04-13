@@ -19,8 +19,8 @@ function Login() {
         setLoading(true)
         try {
             const response = await authService.login(data)
-            if (response.session) {
-                const userData = await authService.getCurrentUser()
+            if (response.success) {
+                const userData = response.data
                 if (userData) {
                     dispatch(storeLogin(userData));
                     toast.success("Login SuccessFull")
@@ -28,6 +28,7 @@ function Login() {
                 }
             } else {
                 toast.error(response.message)
+                setError(response.message)
             }
         } catch (error) {
             toast.error(error.message)

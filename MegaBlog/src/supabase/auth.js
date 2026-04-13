@@ -15,12 +15,12 @@ export class AuthService {
 
             if (error) {
                 console.error("Error occurs while creating user's account ", error)
-                return error.message
+                return { success: false, message: error.message }
             }
-            return data
+            return { success: false, data }
         } catch (error) {
             console.error("Unexpected error:", error)
-            return null
+            return { success: false, message: "Unexpected error while login" }
         }
     }
 
@@ -33,15 +33,15 @@ export class AuthService {
 
             if (error) {
                 console.error("Error occurs while logging in user ", error)
-                return error.message
+                return { success: false, message: error.message }
             }
 
             console.log("SignIn Data", data)
-            return data
+            return { success: true, data: data }
 
         } catch (error) {
             console.error("Unexpected error:", error)
-            return null
+            return { success: false, message: "Unexpected error while login" }
         }
     }
 
@@ -51,7 +51,7 @@ export class AuthService {
 
             if (error) {
                 console.error("Error occurs while logging in user ", error)
-                return error.message
+                return null
             }
             console.log("getCurrentUser data: ", data)
             return data
@@ -68,7 +68,7 @@ export class AuthService {
 
             if (error) {
                 console.error("Error occurs while fetching sessions ", error)
-                return error.message
+                return null
             }
 
             return data
@@ -137,13 +137,13 @@ export class AuthService {
 
             if (error) {
                 console.error("Error occurs during verification of Code for password recovery: ", error)
-                return null
+                return { success: false, message: error.message }
             }
 
-            return data
+            return { success: true, data }
         } catch (error) {
             console.error("Unexpected error:", error)
-            return null
+            return { success: false, message: "Unexpected Error" }
         }
     }
 

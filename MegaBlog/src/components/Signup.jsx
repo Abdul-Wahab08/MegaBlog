@@ -23,8 +23,9 @@ function Signup() {
                 password: data.password,
                 username: data.username
             })
-            if (response.user) {
-                const userData = await authService.getCurrentUser()
+            
+            if (response.success) {
+                const userData = response.data
                 if (userData) dispatch(login(userData))
                 toast.success("Your account created Successfully!")
                 navigate("/")
@@ -32,7 +33,7 @@ function Signup() {
                 toast.error(response.message || "Error occurs while creating user")
             }
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.message || "Something went wrong while creating user")
         } finally {
             setLoading(false)
         }
