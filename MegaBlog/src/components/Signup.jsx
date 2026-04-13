@@ -18,16 +18,18 @@ function Signup() {
         setError("")
         setLoading(true)
         try {
-            const session = await authService.createAccount({
+            const response = await authService.createAccount({
                 email: data.email,
                 password: data.password,
                 username: data.username
             })
-            if (session) {
+            if (response.user) {
                 const userData = await authService.getCurrentUser()
                 if (userData) dispatch(login(userData))
                 toast.success("Your account created Successfully!")
                 navigate("/")
+            } else {
+                toast.error(response.message || "Error occurs while creating user")
             }
         } catch (error) {
             toast.error(error.message)

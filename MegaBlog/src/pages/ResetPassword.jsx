@@ -4,7 +4,6 @@ import { Button, Input, Loader, Logo } from '../components';
 import authService from '../supabase/auth';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import supabase from '../utils/supabase';
 
 function ResetPassword() {
     const { register, handleSubmit } = useForm();
@@ -50,11 +49,12 @@ function ResetPassword() {
         try {
             const response = await authService.resetPassword(data.password)
 
-            if (!response) {
-                toast.error("Reset Password failed")
+            if (!response.success) {
+                toast.error(response.message || "Reset Password failed")
                 navigate("/")
                 return
             }
+
             await authService.logout()
             toast.success("Password reset successfull! Please log in.")
             navigate("/login")
