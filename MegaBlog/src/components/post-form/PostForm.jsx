@@ -32,14 +32,16 @@ function PostForm({ post }) {
                     services.deleteFile(post.featuredImageUrl)
                 }
 
-                const dbPost = await services.updatePost(post.slug, {
+                const response = await services.updatePost(post.slug, {
                     ...data,
                     featuredImageUrl: file ? file.path : post.featuredImageUrl,
                 })
 
-                if (dbPost) {
-                    navigate(`/post/${dbPost.slug}`)
+                if (response.success) {
+                    navigate(`/post/${response.data.slug}`)
                     toast.success("Post is Updated")
+                }else{
+                    toast.error(response.message)
                 }
             } else {
 
@@ -49,20 +51,21 @@ function PostForm({ post }) {
                     filePath = file.path;
                 }
 
-                const dbPost = await services.createPost({
+                const response = await services.createPost({
                     ...data,
                     featuredImageUrl: filePath,
                     userId: userData.user.id,
                     username: userData.user.user_metadata.username
                 });
 
-                if (dbPost) {
-                    navigate(`/post/${dbPost.slug}`)
+                if (response.success) {
+                    navigate(`/post/${response.data.slug}`)
                     toast.success("Post is Created")
+                }else{
+                    toast.error(response.message)
                 }
             }
         } catch (error) {
-            console.error("Error occurs", error)
             toast.error(error)
         } finally {
             setLoading(false)

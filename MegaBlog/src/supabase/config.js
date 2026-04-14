@@ -4,7 +4,6 @@ export class Service {
 
     async createPost({ title, content, featuredImageUrl, status, slug, userId, username }) {
         try {
-            console.log({ title, content, featuredImageUrl, status, slug, userId, username })
             const { data, error } = await supabase.from("posts").insert({
                 title,
                 content,
@@ -17,18 +16,13 @@ export class Service {
                 .select()
                 .single()
 
-                console.log(data)
             if (error) {
-                console.error("Error occurs while publishing post: ", error)
-                return null
+                return { success: false, message: error.message }
             }
 
-            console.log("Post Creation Data: ", data)
-
-            return data
+            return { success: true, data }
         } catch (error) {
-            console.error("Unexpected error: ", error)
-            return null
+            return { success: false, message: "Unexpected Error" }
         }
     }
 
@@ -47,15 +41,13 @@ export class Service {
                 .single()
 
             if (error) {
-                console.error("Error occurs while publishing post: ", error)
-                return null
+                return { success: false, message: error.message }
             }
 
-            console.log("Updated Post's Data: ", data)
-            return data
+            return { success: true, data }
         } catch (error) {
             console.error("Unexpected error: ", error)
-            return null
+            return { success: false, message: "Unexpected Error" }
         }
     }
 
@@ -67,14 +59,12 @@ export class Service {
                 .eq("slug", slug)
 
             if (error) {
-                console.error("Error occurs while deleting post: ", error)
-                return false
+                return { success: false, message: error.message }
             }
 
-            return true
+            return { success: true }
         } catch (error) {
-            console.error("Unexpected error: ", error)
-            return false
+            return { success: false, message: "Unexpected Error" }
         }
     }
 
@@ -87,13 +77,11 @@ export class Service {
                 .single()
 
             if (error) {
-                console.error("Error occurs while fetching post: ", error)
                 return null
             }
 
             return data
         } catch (error) {
-            console.error("Unexpected error: ", error)
             return null
         }
     }
@@ -106,14 +94,11 @@ export class Service {
                 .eq("status", "active")
 
             if (error) {
-                console.error("Error occurs while fetching posts: ", error)
                 return null
             }
 
-            console.log("fetching all posts's Data: ", data)
             return data
         } catch (error) {
-            console.error("Unexpected error: ", error)
             return null
         }
     }
@@ -127,15 +112,12 @@ export class Service {
                 .upload(filePath, file)
 
             if (error) {
-                console.error("Error occurs while uploading file", error)
                 return null
             }
 
-            console.log("File Uploading data: ", fileUploadData)
             return fileUploadData
 
         } catch (error) {
-            console.error("Unexpected error: ", error)
             return null
         }
     }
@@ -148,13 +130,11 @@ export class Service {
                 .remove([filePath])
 
             if (error) {
-                console.error("Error occurs while deleting file", error)
                 return false
             }
 
             return true
         } catch (error) {
-            console.error("Unexpected error: ", error)
             return false
         }
     }
@@ -165,10 +145,9 @@ export class Service {
                 .storage
                 .from("featuredImages")
                 .getPublicUrl(filePath)
-                
+
             return data.publicUrl
         } catch (error) {
-            console.error("Unexpected error: ", error)
             return null
         }
     }
@@ -181,11 +160,9 @@ export class Service {
             })
 
             if (error) {
-                console.error("Error occurs while liking post", error)
                 return
             }
         } catch (error) {
-            console.error("Unexpected error: ", error)
             return
         }
     }
@@ -199,7 +176,6 @@ export class Service {
                 .eq("userId", userId)
 
             if (isUserLikesPostError) {
-                console.error("Error occurs while fetching total likes ", isUserLikesPostError)
                 return false
             }
 
@@ -210,17 +186,12 @@ export class Service {
                     .eq("postId", postId)
                     .eq("userId", userId)
 
-                if (error) {
-                    console.error("Error occurs while unliking post ", error)
-                    return false
-                }
-
+                if (error) return false
                 return true
             } else {
                 return false
             }
         } catch (error) {
-            console.error("Unexpected error: ", error)
             return false
         }
     }
@@ -233,13 +204,11 @@ export class Service {
                 .eq("postId", postId)
 
             if (error) {
-                console.error("Error occurs while fetching total likes ", error)
                 return 0
             }
 
             return count
         } catch (error) {
-            console.error("Unexpected error: ", error)
             return 0
         }
     }
@@ -253,7 +222,6 @@ export class Service {
                 .eq("userId", userId)
 
             if (error) {
-                console.error("Error occurs while finding user likes his post ", error)
                 return false
             }
 
@@ -264,7 +232,6 @@ export class Service {
             }
 
         } catch (error) {
-            console.error("Unexpected error: ", error)
             return false
         }
     }

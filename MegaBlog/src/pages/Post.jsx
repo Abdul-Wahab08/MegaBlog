@@ -33,12 +33,10 @@ export default function Post() {
     }, [slug, navigate]);
 
     const deletePost = () => {
-        service.deletePost(post.slug).then((status) => {
-            if (status) {
-                console.log("Status: ", status)
+        service.deletePost(post.slug).then((response) => {
+            if (response.success) {
                 service.deleteFile(post.featuredImageUrl).then((isDeleted) => {
                     if (isDeleted) {
-                        console.log("isDeleted", isDeleted)
                         toast.success("Post deleted!")
                         navigate("/");
                     } else {
@@ -46,7 +44,7 @@ export default function Post() {
                     }
                 });
             } else {
-                toast.error("Post Deletion Fails")
+                toast.error(response.message)
             }
         });
     };
