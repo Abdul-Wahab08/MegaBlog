@@ -4,16 +4,13 @@ import './App.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { login, logout } from "./store/authSlice"
 import { Header, Footer, Loader } from "./components"
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
 function App() {
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const status = useSelector((state) => state.auth.status)
 
   useEffect(() => {
-    if (status) {
       setLoading(true)
       authService.getCurrentUser().then((userData) => {
         if (userData) {
@@ -22,7 +19,6 @@ function App() {
           dispatch(logout)
         }
       }).finally(() => setLoading(false))
-    }
   }, [])
 
   return !loading ? (

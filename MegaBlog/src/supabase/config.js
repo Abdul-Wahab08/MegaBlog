@@ -134,13 +134,6 @@ export class Service {
             console.log("File Uploading data: ", fileUploadData)
             return fileUploadData
 
-            // const { data } = supabase
-            //     .storage
-            //     .from("featuredImage")
-            //     .getPublicUrl(filePath)
-            // console.log("FeaturedImage public url fetched data:  ", data)
-
-            // return data.publicUrl
         } catch (error) {
             console.error("Unexpected error: ", error)
             return null
@@ -215,7 +208,7 @@ export class Service {
                     .from("likes")
                     .delete()
                     .eq("postId", postId)
-                    .eq("userId", postId)
+                    .eq("userId", userId)
 
                 if (error) {
                     console.error("Error occurs while unliking post ", error)

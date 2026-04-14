@@ -92,7 +92,7 @@ export default function Post() {
                         {parse(post.content)}
                     </div>
                 </div>
-                <LikeBtn postId={post.id} user={userData} />
+                <LikeBtn postId={post.id} postUserId={post.userId} user={userData} />
             </Container>
         </div>
     ) : null;
