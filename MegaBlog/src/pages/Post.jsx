@@ -52,7 +52,7 @@ export default function Post() {
     return post ? (
         <div className="py-8">
             <Container>
-                <div className="w-full flex flex-col gap-5 justify-center items-center mb-4 relative rounded-xl p-2">
+                <div className="w-full flex flex-col gap-1 justify-center items-center mb-4 relative rounded-xl p-2">
                     <div className="relative flex justify-center items-center w-full h-[50vh] sm:h-[70vh] mb-8">
                         <img
                             src={postImageUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0CMibFlRVj46jf-9KmrMpptMMOuQgm5uSHg&s"}
