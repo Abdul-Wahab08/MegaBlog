@@ -37,11 +37,11 @@ function Header() {
   return (
     <header className='bg-gray-500 py-3 shadow rounded-lg'>
       <Container>
-        <nav className='flex justify-between items-center flex-col md:flex-row gap-2 sm:gap-4'>
+        <nav className='flex justify-between items-center flex-col sm:flex-row gap-2 sm:gap-4'>
           <div className='flex items-center'>
             <Link to='/'> <Logo width="70px" /> </Link>
           </div>
-          <ul className='flex sm:flex-row flex-wrap gap-1 sm:gap-4 font-medium'> {navItems.map((item) => item.status ?
+          <ul className='flex sm:flex-row flex-col gap-1 sm:gap-4 font-medium'> {navItems.map((item) => item.status ?
             (<li key={item.name}> <button onClick={() => navigate(item.slug)} className='px-3 sm:px-6 py-2 cursor-pointer duration-200 rounded-full hover:bg-gray-100'>{item.name}</button> </li>)
             : null)}
           </ul>

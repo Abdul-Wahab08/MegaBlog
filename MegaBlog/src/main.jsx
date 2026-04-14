@@ -52,7 +52,7 @@ const router = createBrowserRouter([
       {
         path: "/reset-password",
         element: (
-            <ResetPassword />
+          <ResetPassword />
         )
       },
       {
@@ -84,7 +84,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/post/:slug",
-        element: <Post />
+        element: (
+          <AuthLayout authentication>
+            <Post />
+          </AuthLayout>
+        )
       }
     ]
   }
@@ -93,8 +97,8 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-     <RouterProvider router={router} />
-     <ToastContainer
+      <RouterProvider router={router} />
+      <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}

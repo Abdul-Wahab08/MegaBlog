@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import service from "../supabase/config"
 import { Container, PostCard } from '../components'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 function Home() {
     const [posts, setPosts] = useState([])
     const status = useSelector((state) => state.auth.status)
+    const navigate = useNavigate()
     useEffect(() => {
-        if(status){
+        if (status) {
             service.getPosts().then((posts) => {
                 if (posts) {
                     setPosts(posts)
                 }
             })
+        } else {
+            setPosts([])
         }
-    }, [])
+    }, [status])
 
 
     if (posts.length === 0 && !status) {
@@ -35,20 +38,20 @@ function Home() {
             </div>
         )
     } else if (posts.length === 0 && status === true) {
-    return (
-        <div className="w-full py-8 mt-4 text-center">
-        <Container>
-            <div className="flex flex-wrap">
-                <div className="p-2 w-full">
-                    <Link to="/add-post">
-                    <h1 className="text-2xl font-bold hover:text-gray-500">
-                        No post till now. Upload First!
-                    </h1>
-                    </Link>
-                </div>
+        return (
+            <div className="w-full py-8 mt-4 text-center">
+                <Container>
+                    <div className="flex flex-wrap">
+                        <div className="p-2 w-full">
+                            <Link to="/add-post">
+                                <h1 className="text-2xl font-bold hover:text-gray-500">
+                                    No post till now. Upload First!
+                                </h1>
+                            </Link>
+                        </div>
+                    </div>
+                </Container>
             </div>
-         </Container>
-         </div>
         )
     } else {
         return (
